@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<!-- listing element's valid values:
+* category
+    seedlings
+    clones
+    mutated
+    about
+* isSold
+    false
+    true
+* imageUrl
+    static/images/...
+ -->
+
+<listings>
+
+    <listing>
+        <itemNumber>10000</itemNumber>
+        <category>seedlings</category>
+        <description>a normal cactus</description>
+        <price>8</price>
+        <isSold>false</isSold>
+        <imageUrl>static/images/test_cactus.png</imageUrl>
+    </listing>
+
+</listings>
