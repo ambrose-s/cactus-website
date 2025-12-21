@@ -4,3 +4,28 @@
     --grey: E0E0E0E0;
     --link: 0000FF;
 }
+
+* {
+    font: normal normal normal 16px serif;
+}
+
+header {
+    position: sticky;
+    top: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+header > * {
+    padding: 5px;
+    margin: 5px;
+    background-color: white;
+    border-bottom-color: var(--black);
+    border-bottom-width: 1px;
+    border-bottom-style: outset;
+    border-right-color: var(--black);
+    border-right-width: 1px;
+    border-right-style: outset;
+}

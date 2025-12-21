@@ -155,9 +155,31 @@
     async function main() {
         const listings = await getListingsArray();
         generateListingHtml(listings);
+        shrinkWrap(document.querySelector("p"));
     }
 
+    /* Credit to Jake Meyers and V. Rubinetti 4.10.24
+        https://stackoverflow.com/questions/14596213/shrink-div-to-text-thats-wrapped-to-its-max-width */
+    function shrinkWrap(element) {
+        const {firstChild, lastChild} = element;
+        if (!element || !firstChild || !lastChild) return;
+
+        element.style.width = 'auto';
+
+        const range = document.createRange();
+        range.setStartBefore(firstChild);
+        range.setEndAfter(lastChild);
+        const {width} = range.getBoundingClientRect();
+        element.style.width = width + "px";
+        element.style.boxSizing = "content-box";
+    };
+
     main();
+
+    window.addEventListener('resize', () => {
+        const paragraphs = document.querySelectorAll("p");
+        paragraphs.forEach(paragraph => shrinkWrap(paragraph));
+    });
 </script>
 
 </html>
