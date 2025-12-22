@@ -45,6 +45,14 @@
     <main>
         <section id="seedlings">
             <h1> Seedlings </h1>
+            <div class="grid">
+                <div class="listing">
+                    <p class="listing_number">10000</p>
+                    <img src="/static/images/test_cactus.png" class="listing_thumb" />
+                    <p class="listing_description">The five boxing wizards jump quickly. Jackdaws love my big sphinx of quartz.</p>
+                    <p class="listing_price">$5.00</p>
+                </div>
+            </div>
         </section>
         <section id="clones">
             <h1> Clones </h1>
@@ -142,13 +150,13 @@
        and generates html */
     async function generateListingHtml(listings) {
         for (const listing of listings) {
-            const testP = document.createElement("p");
+            /*const testP = document.createElement("p");
             testP.textContent = `[${listing.itemNumber}] ${listing.description} - $${listing.price}`;
             const testImg = document.createElement("img");
             testImg.src = `${listing.imageUrl}`;
             const section = document.getElementById(`${listing.category}`);
             section.appendChild(testP);
-            section.appendChild(testImg);
+            section.appendChild(testImg);*/
         }
     }
 
@@ -159,7 +167,7 @@
     }
 
     /* Credit to Jake Meyers and V. Rubinetti 4.10.24
-        https://stackoverflow.com/questions/14596213/shrink-div-to-text-thats-wrapped-to-its-max-width */
+        https://stackoverflow.com/questions/14596213/ */
     function shrinkWrap(element) {
         const {firstChild, lastChild} = element;
         if (!element || !firstChild || !lastChild) return;

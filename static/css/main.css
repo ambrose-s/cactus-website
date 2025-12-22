@@ -1,28 +1,29 @@
 :root {
-    --white: ffffff;
-    --black: 000000;
-    --grey: E0E0E0E0;
-    --link: 0000FF;
+  --white: ffffff;
+  --black: 000000;
+  --grey: E0E0E0E0;
+  --link: 0000FF;
 }
 
 * {
-    font: normal normal normal 16px serif;
+  font: normal normal normal 16px serif;
 }
 
 body {
-    padding: 20px;
+  padding: 20px;
 }
 
 /* header */
 
 header {
-    position: sticky;
-    margin-top: -10px;
-    top: 10px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    flex-wrap: wrap;
+  z-index: 10;
+  position: sticky;
+  margin-top: -10px;
+  top: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 header > * {
@@ -40,8 +41,11 @@ header > * {
 }
 
 /* h1 */
+/* credit to Tsuneo Yoshioka and Erick Xenes
+   https://stackoverflow.com/questions/5214127/ */
 
 h1 {
+  z-index: 0;
   display: flex;
   flex-direction: row;
   font-size: medium;
@@ -55,4 +59,41 @@ h1:after{
 }
 h1:after {
   margin-left: 10px
+}
+
+/* listings */
+
+.grid {
+  display: grid;
+  grid-template-columns: 25% 25% 25% 25%;
+}
+
+.listing {
+  z-index: 5;
+  width: 25%px;
+  padding: 5px;
+}
+
+.listing > p {
+  z-index: 7;
+  width: fit-content;
+  padding: 3px;
+  margin: 5px;
+  background-color: white;
+  border-bottom-color: var(--black);
+  border-bottom-width: 1px;
+  border-bottom-style: outset;
+  border-right-color: var(--black);
+  border-right-width: 1px;
+  border-right-style: outset;
+}
+
+.listing_thumb {
+  z-index: 6;
+  width: 100%;
+  height: auto;
+}
+
+.listing_number {
+  position: absolute;
 }
