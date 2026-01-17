@@ -1,0 +1,34 @@
+on: 
+  workflow_dispatch:
+    inputs:
+      item_number:
+        required: true
+      category:
+        required: true
+        type: choice
+        options:
+          - 'seedlings'
+          - 'clones'
+          - 'mutated'
+          - 'other'
+      description:
+        required: true
+        default: 'Description coming soon.'
+      price:
+        required: true
+        default: 0
+      is_sold:
+        required: true
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+jobs:
+  test_job:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+        echo "${{ github.event.inputs.item_number }}" > test.txt
+
+      
