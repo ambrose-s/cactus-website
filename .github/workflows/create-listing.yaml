@@ -26,7 +26,7 @@ on:
           - 'true'
           - 'false'
 jobs:
-  test_job:
+  update_xml:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -39,13 +39,12 @@ jobs:
 
       - name: Update XML listing
         run: |
-          xmlstarlet ed -s "/listings" -t "newListing" -v "" \
-          -s "/listings/newListing" -t -n "itemNumber" -v "${{ github.event.inputs.item_number }}" \
-          -s "/listings/newListing" -t -n "category" -v "${{ github.event.inputs.category }}" \
-          -s "/listings/newListing" -t -n "description" -v "${{ github.event.inputs.description }}" \
-          -s "/listings/newListing" -t -n "price" -v "${{ github.event.inputs.price }}" \
-          -s "/listings/newListing" -t -n "isSold" -v "${{ github.event.inputs.is_sold }}" \
-          static/xml/listings.xml
+          xmlstarlet ed -s "/listings" -t elem -n "listing" -v "" static/xml/listings.xml
+          xmlstarlet ed -a "/listings/listing[last()]" -t elem -n "itemNumber" -v "${{ github.event.inputs.item_number }}" static/xml/listings.xml
+          xmlstarlet ed -a "/listings/listing[last()]" -t elem -n "category" -v "${{ github.event.inputs.category }}" static/xml/listings.xml
+          xmlstarlet ed -a "/listings/listing[last()]" -t elem -n "description" -v "${{ github.event.inputs.description }}" static/xml/listings.xml
+          xmlstarlet ed -a "/listings/listing[last()]" -t elem -n "price" -v "${{ github.event.inputs.price }}" static/xml/listings.xml
+          xmlstarlet ed -a "/listings/listing[last()]" -t elem -n "isSold" -v "${{ github.event.inputs.is_sold }}" static/xml/listings.xml
 
       - name: Commit changes
         run: |
