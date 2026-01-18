@@ -29,8 +29,28 @@ jobs:
   test_job:
     runs-on: ubuntu-latest
     steps:
-      - name: Write item number to file
-        run: |
-          echo "${{ github.event.inputs.item_number }}" > test.txt
-
+      - name: Checkout repository
+        uses: actions/checkout@v2
       
+      - name: Install XMLstarlet
+        run: |
+          sudo apt-get update
+          sudo apt-get install xmlstarlet -y
+
+      - name: Update XML listing
+        run: |
+          xmlstarlet ed -s "/listings" -t "newListing" -v "" \
+          -s "/listings/newListing" -t -n "itemNumber" -v "${{ github.event.inputs.item_number }}" \
+          -s "/listings/newListing" -t -n "category" -v "${{ github.event.inputs.category }}" \
+          -s "/listings/newListing" -t -n "description" -v "${{ github.event.inputs.description }}" \
+          -s "/listings/newListing" -t -n "price" -v "${{ github.event.inputs.price }}" \
+          -s "/listings/newListing" -t -n "isSold" -v "${{ github.event.inputs.is_sold }}" \
+          static/xml/listings.xml
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Action"
+          git add static/xml/listings.xml
+          git commit -m "Add new listing: ${{ github.event.inputs.item_number }}"
+          git push
