@@ -39,17 +39,22 @@ jobs:
 
       - name: Update XML listing
         run: |
-          xmlstarlet ed -s "/listings" -t elem -n "listing" static/xml/listings.xml
-          xmlstarlet ed -s "/listings/listing[last()]" -t elem -n "itemNumber" -v "${{ github.event.inputs.item_number }}" static/xml/listings.xml
-          xmlstarlet ed -s "/listings/listing[last()]" -t elem -n "category" -v "${{ github.event.inputs.category }}" static/xml/listings.xml
-          xmlstarlet ed -s "/listings/listing[last()]" -t elem -n "description" -v "${{ github.event.inputs.description }}" static/xml/listings.xml
-          xmlstarlet ed -s "/listings/listing[last()]" -t elem -n "price" -v "${{ github.event.inputs.price }}" static/xml/listings.xml
-          xmlstarlet ed -s "/listings/listing[last()]" -t elem -n "isSold" -v "${{ github.event.inputs.is_sold }}" static/xml/listings.xml
-
+          xmlstarlet ed -s "/listings" -t elem -n "listing" static/xml/listings.xml \
+          -s "/listings/listing[last()]" -t elem -n "itemNumber" -v "${{ github.event.inputs.item_number }}" \
+          -s "/listings/listing[last()]" -t elem -n "category" -v "${{ github.event.inputs.category }}" \
+          -s "/listings/listing[last()]" -t elem -n "description" -v "${{ github.event.inputs.description }}" \
+          -s "/listings/listing[last()]" -t elem -n "price" -v "${{ github.event.inputs.price }}" \
+          -s "/listings/listing[last()]" -t elem -n "isSold" -v "${{ github.event.inputs.is_sold }}" \
+          static/xml/listings.xml
+          
       - name: Commit changes
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Action"
           git add static/xml/listings.xml
-          git commit -m "Add new listing: ${{ github.event.inputs.item_number }}"
-          git push
+          if [[ `git diff --cached --name-only` ]]; then
+            git commit -m "Add new listing: ${{ github.event.inputs.item_number }}"
+            git push
+          else
+            echo "No changes to commit."
+          fi
