@@ -49,4 +49,11 @@
     <price>4.5</price>
     <isSold>false</isSold>
   </listing>
+  <listing>
+    <itemNumber/>
+    <category>other</category>
+    <description/>
+    <price>a</price>
+    <isSold>false</isSold>
+  </listing>
 </listings>
