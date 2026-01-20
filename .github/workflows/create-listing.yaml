@@ -46,7 +46,7 @@ jobs:
           validate_input() {
             local input="$1"
             local name="$2"
-            if [[ "$input" =~ [\<\>\"\'\\] ]]; then
+            if [[ "$input" =~ [\&\<\>\"\'\\] ]]; then
               echo "Error: '${name}' must not include special characters."
               exit 1
             fi
