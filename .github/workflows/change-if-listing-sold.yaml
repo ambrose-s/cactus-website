@@ -1,0 +1,63 @@
+on: 
+  workflow_dispatch:
+    inputs:
+      item_number:
+        required: true
+      is_sold:
+        required: true
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+jobs:
+  update_xml:
+    runs-on: ubuntu-latest
+    steps:
+      - name: validate inputs
+        run: |
+          validate_input() {
+            local input="$1"
+            local name="$2"
+            if [[ "$input" =~ [\&\<\>\"\'\\] ]]; then
+              echo "Error: '${name}' must not include special characters."
+              exit 1
+            fi
+          }
+
+          item_number="${{ inputs.item_number }}"
+
+          validate_input "$item_number" "item_number"
+
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      
+      - name: Install XMLstarlet
+        run: |
+          sudo apt-get update
+          sudo apt-get install xmlstarlet -y
+
+      - name: Update XML listing
+        run: |
+          item_number="${{ inputs.item_number }}"
+          is_sold="${{ inputs.is_sold }}"
+
+          if xmlstarlet ed -u "/listings/listing[itemNumber='$item_number']/isSold" -v $is_sold static/xml/listings.xml > static/xml/temp.xml; then
+              mv static/xml/temp.xml static/xml/listings.xml
+          else
+              echo "Error updating the XML file."
+              exit 1
+          fi
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Action"
+          # Set the remote URL with the PAT for authentication
+          git remote set-url origin https://x-access-token:${{ secrets.ACCESS_TOKEN }}@github.com/ambrose-s/cactus-website.git
+          git add static/xml/listings.xml
+          if [[ $(git diff --cached --name-only) ]]; then
+            git commit -m "Remove listing: ${{ github.event.inputs.item_number }}"
+            git push
+          else
+            echo "No changes to commit."
+          fi
