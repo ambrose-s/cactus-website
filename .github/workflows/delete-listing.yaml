@@ -39,7 +39,7 @@ jobs:
         run: |
           item_number="${{ inputs.item_number }}"
 
-          if xmlstarlet ed -d "/listings/listing[itemNumber='$item_number']" listings.xml > static/xml/temp.xml; then
+          if xmlstarlet ed -d "/listings/listing[itemNumber='$item_number']" static/xml/listings.xml > static/xml/temp.xml; then
               mv static/xml/temp.xml static/xml/listings.xml
           else
               echo "Error updating the XML file."
