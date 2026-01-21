@@ -61,6 +61,6 @@
     <category>seedlings</category>
     <description/>
     <price>0</price>
-    <isSold>false</isSold>
+    <isSold>true</isSold>
   </listing>
 </listings>
