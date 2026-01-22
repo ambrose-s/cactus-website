@@ -9,12 +9,6 @@ jobs:
   update_xml:
     runs-on: ubuntu-latest
     steps:
-      - name: Validate xml file
-        run: |
-          if [[ ! -f $xml_path ]]; then
-            echo "Error: listings.xml does not exist."
-            exit 1
-          fi
 
       - name: Validate inputs
         run: |
@@ -33,6 +27,13 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v6
+        
+      - name: Validate xml file
+        run: |
+          if [[ ! -f $xml_path ]]; then
+            echo "Error: listings.xml does not exist."
+            exit 1
+          fi
       
       - name: Install XMLstarlet
         run: |
