@@ -1,0 +1,146 @@
+name: add-listing-image
+on:
+  issues:
+    types: [opened]
+env:
+  xml_path: static/xml/listings.xml
+  temp_path: static/xml/temp.xml
+jobs:
+  update_xml:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate xml file
+        run: |
+          if [[ ! -f $xml_path ]]; then
+            echo "Error: listings.xml does not exist."
+            exit 1
+          fi
+
+      - name: Validate inputs
+        run: |
+          validate_input() {
+            local input="$1"
+            local name="$2"
+            if [[ "$input" =~ [\&\<\>\"\'\\] ]]; then
+              echo "Error: '${name}' must not include special characters."
+              exit 1
+            fi
+          }
+
+          item_number="${{ github.event.issue.title }}"
+
+          validate_input "$item_number" "item_number"
+
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      
+      - name: Install XMLstarlet
+        run: |
+          sudo apt-get update
+          sudo apt-get install xmlstarlet -y
+
+      - name: Install ImageMagick
+        run: |
+          sudo apt-get install imagemagick -y
+
+      - name: Update XML listing
+        run: |
+          item_number="${{ github.event.issue.title }}"
+          body="${{ github.event.issue.body }}"
+          img_url=$(echo "$body" | grep -oP 'src="\K[^"]+')
+
+          if [ -z "$img_url" ]; then
+            echo "Error: No image URL found in the issue body."
+            exit 1
+          fi
+
+          # create images to embed
+
+          if ! curl -o "static/images/small_$item_number.png" "$img_url"; then
+            echo "Error: Failed to download image from $img_url."
+            exit 1
+          fi
+
+          cp "static/images/small_$item_number.png" "static/images/medium_$item_number.png"
+          cp "static/images/small_$item_number.png" "static/images/big_$item_number.png"
+
+          image_small="static/images/small_$item_number.png"
+          image_medium="static/images/medium_$item_number.png"
+          image_big="static/images/big_$item_number.png"
+
+          mogrify -path "static/images" -resize 640x640 "$image_small"
+          mogrify -path "static/images" -resize 1024x1024 "$image_medium"
+          mogrify -path "static/images" -resize 1920x1920 "$image_big"
+
+          # append or replace images on listing
+
+          # image small
+          if xmlstarlet sel -t -m "/listings/listing[itemNumber='$item_number']/imageSmall" -v "." listings.xml | grep -q .; then
+            # element already exists, update it with new value
+            if xmlstarlet ed -u "/listings/listing[itemNumber='$item_number']/imageSmall" -v "$image_small" $xml_path > $temp_path; then
+                mv $temp_path $xml_path
+            else
+                echo "Error updating the XML file."
+                exit 1
+            fi
+          else
+            # element does not exist, insert new subnode
+            if xmlstarlet ed -s "/listings/listing[itemNumber='$item_number']" -t elem -n "imageSmall" -v "$image_small" $xml_path > $temp_path; then
+                mv $temp_path $xml_path
+            else
+                echo "Error updating the XML file."
+                exit 1
+            fi
+          fi
+
+          # image medium
+          if xmlstarlet sel -t -m "/listings/listing[itemNumber='$item_number']/imageMedium" -v "." listings.xml | grep -q .; then
+            # element already exists, update it with new value
+            if xmlstarlet ed -u "/listings/listing[itemNumber='$item_number']/imageMedium" -v "$image_medium" $xml_path > $temp_path; then
+                mv $temp_path $xml_path
+            else
+                echo "Error updating the XML file."
+                exit 1
+            fi
+          else
+            # element does not exist, insert new subnode
+            if xmlstarlet ed -s "/listings/listing[itemNumber='$item_number']" -t elem -n "imageMedium" -v "$image_medium" $xml_path > $temp_path; then
+                mv $temp_path $xml_path
+            else
+                echo "Error updating the XML file."
+                exit 1
+            fi
+          fi
+
+          # image big
+          if xmlstarlet sel -t -m "/listings/listing[itemNumber='$item_number']/imageBig" -v "." listings.xml | grep -q .; then
+            # element already exists, update it with new value
+            if xmlstarlet ed -u "/listings/listing[itemNumber='$item_number']/imageBig" -v "$image_big" $xml_path > $temp_path; then
+                mv $temp_path $xml_path
+            else
+                echo "Error updating the XML file."
+                exit 1
+            fi
+          else
+            # element does not exist, insert new subnode
+            if xmlstarlet ed -s "/listings/listing[itemNumber='$item_number']" -t elem -n "imageBig" -v "$image_big" $xml_path > $temp_path; then
+                mv $temp_path $xml_path
+            else
+                echo "Error updating the XML file."
+                exit 1
+            fi
+          fi
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Action"
+          # Set the remote URL with the PAT for authentication
+          git remote set-url origin https://x-access-token:${{ secrets.ACCESS_TOKEN }}@github.com/ambrose-s/cactus-website.git
+          git add $xml_path
+          if [[ $(git diff --cached --name-only) ]]; then
+            git commit -m "Add image to listing: ${{ github.event.inputs.item_number }}"
+            git push
+          else
+            echo "No changes to commit."
+          fi
