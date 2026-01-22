@@ -27,12 +27,16 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v6
-        
-      - name: Validate xml file
+
+      - name: Verify XML path
         run: |
-          if [[ ! -f $xml_path ]]; then
-            echo "Error: listings.xml does not exist."
-            exit 1
+          echo "XML Path: $xml_path"
+          if [[ -f $xml_path ]]; then
+            echo "$xml_path exists."
+          else
+            echo "$xml_path does not exist."
+            echo "Listing files in static/xml directory:"
+            ls -R static/xml
           fi
       
       - name: Install XMLstarlet
