@@ -56,6 +56,7 @@ jobs:
             img_url="${BASH_REMATCH[1]}"
           else
             echo "Error: No image URL found in the issue body."
+            echo "Debugging: ${BASH_REMATCH[1]}"
             exit 1
           fi
 
