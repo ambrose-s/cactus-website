@@ -74,6 +74,13 @@ jobs:
             echo "Listing files in static/xml directory:"
             ls -R static/xml
           fi
+
+      - name: Pull latest changes
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Action"
+          git remote set-url origin https://x-access-token:${{ secrets.ACCESS_TOKEN }}@github.com/ambrose-s/cactus-website.git
+          git pull origin main
       
       - name: Install XMLstarlet
         run: |
@@ -92,10 +99,6 @@ jobs:
           
       - name: Commit changes
         run: |
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Action"
-          # Set the remote URL with the PAT for authentication
-          git remote set-url origin https://x-access-token:${{ secrets.ACCESS_TOKEN }}@github.com/ambrose-s/cactus-website.git
           git add static/xml/listings.xml
           if [[ $(git diff --cached --name-only) ]]; then
             git commit -m "Add new listing: ${{ github.event.inputs.item_number }}"
