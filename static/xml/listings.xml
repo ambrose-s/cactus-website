@@ -72,6 +72,9 @@
     <description>Description coming soon.</description>
     <price>0</price>
     <isSold>true</isSold>
+    <imageSmall>static/images/small_0002.png</imageSmall>
+    <imageMedium>static/images/medium_0002.png</imageMedium>
+    <imageBig>static/images/big_0002.png</imageBig>
   </listing>
   <listing>
     <itemNumber>0003</itemNumber>
