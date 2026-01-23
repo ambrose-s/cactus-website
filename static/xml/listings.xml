@@ -92,6 +92,9 @@
     <description>Description coming soon.</description>
     <price>0</price>
     <isSold>true</isSold>
+    <imageSmall>static/images/small_0004.png</imageSmall>
+    <imageMedium>static/images/medium_0004.png</imageMedium>
+    <imageBig>static/images/big_0004.png</imageBig>
   </listing>
   <listing>
     <itemNumber>0005</itemNumber>
