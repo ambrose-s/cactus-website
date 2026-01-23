@@ -51,7 +51,7 @@ jobs:
       - name: Update XML listing
         run: |
           item_number="${{ github.event.issue.title }}"
-          body="${{ github.event.issue.body }}"
+          body='${{ github.event.issue.body }}'
           if [[ "$body" =~ src=\"([^\"]+)\" ]]; then
             img_url="${BASH_REMATCH[1]}"
           else
