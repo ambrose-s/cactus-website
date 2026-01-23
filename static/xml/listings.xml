@@ -92,6 +92,6 @@
     <category>seedlings</category>
     <description>Description coming soon.</description>
     <price>0</price>
-    <isSold>false</isSold>
+    <isSold>true</isSold>
   </listing>
 </listings>
