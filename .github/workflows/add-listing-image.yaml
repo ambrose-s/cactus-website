@@ -50,13 +50,13 @@ jobs:
 
       - name: Update XML listing
         run: |
+          exit 5
           item_number="${{ github.event.issue.title }}"
           body="${{ github.event.issue.body }}"
           img_url=$(echo "$body" | grep -oP 'src="\K[^"]+')
 
           echo "Debugging: img_url: $img_url"
 
-          exit 5
 
           if [ -z "$img_url" ]; then
             echo "Error: No image URL found in the issue body."
