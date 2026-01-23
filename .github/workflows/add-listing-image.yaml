@@ -11,8 +11,6 @@ jobs:
     steps:
       - name: Queue workflow
         uses: ahmadnassri/action-workflow-queue@v1
-        with:
-          ref: modify-xml
 
       - name: Validate inputs
         run: |

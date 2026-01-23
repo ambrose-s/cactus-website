@@ -37,8 +37,6 @@ jobs:
     steps:
       - name: Queue workflow
         uses: ahmadnassri/action-workflow-queue@v1
-        with:
-          ref: modify-xml
 
       - name: validate inputs
         run: |
@@ -101,7 +99,11 @@ jobs:
           git add static/xml/listings.xml
           if [[ $(git diff --cached --name-only) ]]; then
             git commit -m "Add new listing: ${{ github.event.inputs.item_number }}"
-            git push
+            git push || {
+              echo "Push failed, trying to pull changes first"
+              git pull origin main
+              git push
+            }
           else
             echo "No changes to commit."
           fi
