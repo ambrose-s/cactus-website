@@ -9,6 +9,10 @@ jobs:
   update_xml:
     runs-on: ubuntu-latest
     steps:
+      - name: Queue workflow
+        uses: ahmadnassri/action-workflow-queue@v1
+        with:
+          ref: modify-xml
 
       - name: Validate inputs
         run: |

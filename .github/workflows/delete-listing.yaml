@@ -5,13 +5,16 @@ on:
       item_number:
         required: true
         type: string
-        description: |
-          item_number
-          (Will not contain the characters: <, >, &, \", ', \\)
+        description: item_number
 jobs:
   update_xml:
     runs-on: ubuntu-latest
     steps:
+      - name: Queue workflow
+        uses: ahmadnassri/action-workflow-queue@v1
+        with:
+          ref: modify-xml
+
       - name: validate inputs
         run: |
           validate_input() {
@@ -29,6 +32,17 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v6
+
+      - name: Verify XML path
+        run: |
+          echo "XML Path: $xml_path"
+          if [[ -f $xml_path ]]; then
+            echo "$xml_path exists."
+          else
+            echo "$xml_path does not exist."
+            echo "Listing files in static/xml directory:"
+            ls -R static/xml
+          fi
       
       - name: Install XMLstarlet
         run: |
