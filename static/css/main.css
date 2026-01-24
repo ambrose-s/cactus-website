@@ -171,6 +171,24 @@ h1:after{
 
 
 
+/* order information */
+
+#bold {
+  font-weight: bold;
+}
+
+#order_info p {
+  padding: 10px;
+  padding-top: 0;
+  margin-bottom: 25px;
+  width: fit-content;
+  background-color: var(--white);
+  border-bottom: 1px outset var(--black);
+  border-right: 1px outset var(--black);
+}
+
+
+
 /* about */
 
 #about_contents {
@@ -186,7 +204,7 @@ h1:after{
 }
 
 #about_contents > img {
-  max-width: 50%;
+  max-width: 45%;
 }
 
 
@@ -194,9 +212,18 @@ h1:after{
 
 #footer_contents {
   display: flex;
+  flex-direction: column;
   flex-wrap: nowrap;
   justify-content: space-between;
   padding: 5px;
+  gap: 15px;
+}
+
+@media screen and (width >= 650px) {
+  #footer_contents {
+    flex-direction: row;
+    
+  }
 }
 
 footer ul {
@@ -208,4 +235,15 @@ footer ul {
 footer ul li {
   display: block;
   padding: 0;
+}
+
+footer ul li h2 {
+  margin: 0;
+}
+
+footer ul li img {
+  height: 1em;
+  margin: 0;
+  display: inline;
+  vertical-align: bottom;
 }
